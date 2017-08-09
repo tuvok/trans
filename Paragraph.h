@@ -19,7 +19,7 @@ public:
     };
 
     Paragraph();
-    Paragraph(QString text_, Type t_);
+    Paragraph(QString text_, Type t_, int number_);
     virtual ~Paragraph();
 
     bool parse(const QString& s);

@@ -116,6 +116,39 @@ void Importer::importDeclined(int id)
     inProgress.erase(id);
 }
 
+void Importer::insertParagraphNumber(int number, QTextCursor& cur)
+{
+    cur.beginEditBlock();
+    auto format = cur.charFormat();
+    auto oldWeight = format.fontWeight();
+
+    format.setFontWeight(QFont::Bold);
+    cur.setCharFormat(format);
+
+    cur.insertText(QString::number(number) + ". ");
+
+    format.setFontWeight(oldWeight);
+    cur.setCharFormat(format);
+    cur.endEditBlock();
+}
+
+void Importer::insertParagraphBody(const QString& text, QTextCursor& cur)
+{
+    cur.beginEditBlock();
+    cur.insertText(text);
+    cur.insertText("\n\n");
+    cur.endEditBlock();
+}
+
+void Importer::insertFootnotes(const Paragraph& p, QTextCursor& cur)
+{
+    for (const auto& f : p.footnotes)
+    {
+        insertParagraphNumber(f.number, cur);
+        insertParagraphBody(f.text, cur);
+    }
+}
+
 QTextDocument* Importer::prepareDocument(const std::vector<Paragraph>& par, QTextDocument* doc)
 {
     doc->clear();
@@ -125,24 +158,10 @@ QTextDocument* Importer::prepareDocument(const std::vector<Paragraph>& par, QTex
     {
         if (p.t == Paragraph::Type::Paragraph)
         {
-            cur.beginEditBlock();
+            insertParagraphNumber(p.number, cur);
+            insertParagraphBody(p.text, cur);
 
-            auto format = cur.charFormat();
-            auto oldWeight = format.fontWeight();
-
-            format.setFontWeight(QFont::Bold);
-            cur.setCharFormat(format);
-            cur.insertText(QString::number(p.number) + ". ");
-
-            format.setFontWeight(oldWeight);
-            cur.setCharFormat(format);
-
-            cur.endEditBlock();
-
-            cur.beginEditBlock();
-            cur.insertText(p.text);
-            cur.insertText("\n\n");
-            cur.endEditBlock();
+            insertFootnotes(p, cur);
         }
         else
         {
@@ -170,6 +189,8 @@ QTextDocument* Importer::prepareDocument(const std::vector<Paragraph>& par, QTex
 
             cur.setCharFormat(format);
             cur.endEditBlock();
+
+            insertFootnotes(p, cur);
         }
 
     }
@@ -190,7 +211,6 @@ void Importer::prepareAndSave(const std::vector<Paragraph>& par, QString collect
     {
         if (p.t == Paragraph::Type::Paragraph)
         {
-// substitute \footnote with something first, it contains dots
             p.text.split('.');
         }
     }

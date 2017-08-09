@@ -31,6 +31,9 @@ public slots:
 private:
     QTextDocument* prepareDocument(const std::vector<Paragraph>& par, QTextDocument* doc);
     void prepareAndSave(const std::vector<Paragraph>& par, QString collection);
+    void insertParagraphNumber(int number, QTextCursor& cur);
+    void insertParagraphBody(const QString& text, QTextCursor& cur);
+    void insertFootnotes(const Paragraph& p, QTextCursor& cur);
 
     IDbAbstraction& idb;
     int counter = 0;

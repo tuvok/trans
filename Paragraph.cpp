@@ -11,7 +11,7 @@ Paragraph::Paragraph()
 
 }
 
-Paragraph::Paragraph(QString text_, Type t_) : text(text_), t(t_)
+Paragraph::Paragraph(QString text_, Type t_, int number_) : text(text_), t(t_), number(number_)
 {
 }
 
@@ -28,7 +28,7 @@ void Paragraph::parseFootnotes()
     int start = 0;
     while ((index = fx.indexIn(text.mid(start))) != -1)
     {
-        std::cout << "---------------------paragraph------\n";
+//        std::cout << "---------------------paragraph------\n";
         QStringList foots = fx.capturedTexts();
         for (auto& f : foots)
         {
@@ -40,9 +40,9 @@ void Paragraph::parseFootnotes()
             }
             else
             {
-                footnotes.push_back(Paragraph(f, Type::Footnote));
+                footnotes.push_back(Paragraph(f, Type::Footnote, footnotes.size()));
             }
-            std::cout << "FNT: " << f.toStdString() << "\n\n";
+//            std::cout << "FNT: " << f.toStdString() << "\n\n";
         }
     }
 }
