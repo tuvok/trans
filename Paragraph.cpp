@@ -28,7 +28,6 @@ void Paragraph::parseFootnotes()
     int start = 0;
     while ((index = fx.indexIn(text.mid(start))) != -1)
     {
-//        std::cout << "---------------------paragraph------\n";
         QStringList foots = fx.capturedTexts();
         for (auto& f : foots)
         {
@@ -42,7 +41,6 @@ void Paragraph::parseFootnotes()
             {
                 footnotes.push_back(Paragraph(f, Type::Footnote, footnotes.size()));
             }
-//            std::cout << "FNT: " << f.toStdString() << "\n\n";
         }
     }
 }

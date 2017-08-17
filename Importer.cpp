@@ -209,9 +209,15 @@ void Importer::prepareAndSave(const std::vector<Paragraph>& par, QString collect
 {
     for (const auto& p: par)
     {
+        std::cout << "PARAGRAPH: " << p.text.toStdString() << std::endl;
         if (p.t == Paragraph::Type::Paragraph)
         {
-            p.text.split('.');
+            auto sentences = p.text.split('.');
+            for (const auto& s: sentences)
+            {
+                std::cout << "S: " << s.toStdString() << std::endl;
+            }
         }
-    }
+        std::cout << "\n";
+    }        std::cout << "\n";
 }
